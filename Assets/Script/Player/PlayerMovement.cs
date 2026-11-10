@@ -1,34 +1,25 @@
-
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 3.75f;
+    [SerializeField] private PlayerConfig config;
     [SerializeField] private Rigidbody2D rb;
+    private IMoveInput input;
+    private Vector2 velocity;
 
-    private InputAction moveAction;
-    private InputAction sprintAction;
-    private Vector2 moveInput;
-    private bool isSprinting;
+    // Property public untuk dibaca Animator
+    public Vector2 Velocity => velocity;
+    public bool IsRunning => input != null && input.IsRunning;
+    public Vector2 Facing => input != null ? input.Move : Vector2.zero;
 
-    void Start()
-    {
-        moveAction = InputSystem.actions.FindAction("Move");
-        sprintAction = InputSystem.actions.FindAction("Sprint");
-    }
+    public void Construct(IMoveInput moveInput) => input = moveInput;
 
     void Update()
     {
-        moveInput = moveAction.ReadValue<Vector2>();
-
-        isSprinting = sprintAction != null && sprintAction.IsPressed();
+        if (input == null) return;
+        float speed = input.IsRunning ? config.RunSpeed : config.WalkSpeed;
+        velocity = input.Move * speed;
     }
 
-    void FixedUpdate()
-    {
-        float currentSpeed = isSprinting ? moveSpeed * 1.6f : moveSpeed;
-
-        rb.linearVelocity = moveInput * currentSpeed;
-    }
+    void FixedUpdate() => rb.linearVelocity = velocity;
 }
