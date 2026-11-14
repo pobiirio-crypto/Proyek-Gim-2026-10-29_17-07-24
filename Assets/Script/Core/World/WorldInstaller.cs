@@ -3,10 +3,11 @@ using UnityEngine;
 public class WorldInstaller : MonoBehaviour
 {
     [SerializeField] private PlayerMovement player;
+    [SerializeField] private PlayerInteractor interactor;
 
-    // P2 hanya menerima 1 parameter
-    public void Install(IMoveInput moveInput)
+    public void Install(IMoveInput moveInput, IActionInput actionInput)
     {
         player.Construct(moveInput);
+        interactor.Construct(actionInput);
     }
 }
