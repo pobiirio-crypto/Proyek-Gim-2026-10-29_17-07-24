@@ -8,7 +8,10 @@ public class Npc : MonoBehaviour, IInteractable
 
     public void Interact(PlayerInteractor who)
     {
-        Face(who.transform.position - transform.position);
+        // PERBAIKAN: Gunakan arah hadap player, lalu balikkan (-) agar NPC menghadap player
+        Vector2 arahHadapPlayer = who.movement.Facing;
+        Face(-arahHadapPlayer);
+
         Debug.Log($"{npcName}: Halo!");
     }
 
